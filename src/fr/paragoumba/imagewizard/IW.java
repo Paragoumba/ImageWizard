@@ -4,9 +4,8 @@ import javax.imageio.ImageIO;
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.IOException;
-import java.util.Random;
+import java.util.Scanner;
 
 /**
  * Created by Paragoumba on 16/05/2017.
@@ -19,20 +18,31 @@ public class IW {
 
     public static void main(String[] args) throws IOException {
 
+        Scanner scanner = new Scanner(System.in);
         long time = System.currentTimeMillis();
 
-        try {
+        /*try {
             FileInputStream fis = new FileInputStream("C:/Users/parag/Desktop/carre.png");
             square = ImageIO.read(fis);
             fis.close();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        } catch (IOException e) {e.printStackTrace();}*/
 
-        ImageIO.write(makeFractal(1920, 1080, 1920 / 2, 1080 / 2,
-                new Color(255, 255, 255), new Color(254, 254, 254), new Color(0, 0, 0), 10000000),
-                "png", new File("C:/Users/parag/Desktop/fractals/fractalwb.png"));
+        //makeFractal()
+        int width = 1920;
+        int height = 1080;
+        int startX = 960;
+        int startY = 540;
+        Color backgroundColor = new Color(0, 255, 0);
+        Color mainColor = new Color(0, 0, 255);
+        Color accentuationColor = new Color(31, 31, 31);
+        int iterations = 10000000;
+        boolean putJustSomeMagicPlease = scanner.nextBoolean();
+        ImageIO.write(makeFractal(width, height, startX, startY, backgroundColor, mainColor, accentuationColor, iterations, putJustSomeMagicPlease), "png", new File("D:/Bureau/fractals/fractal" + width + "x" + height + (putJustSomeMagicPlease ? "" : "" + startX + startY + backgroundColor.getRGB() + mainColor.getRGB()) + accentuationColor.getRGB() + iterations + ".png"));
 
+        //makeSpecialFractal()
+        //ImageIO.write(makeSpecialFractal(ImageIO.read(new File("D:/Bureau/fractals/Sans titre.png")), new Color(0, 255, 255), new Color(221, 221, 34), 1000), "png", new File("D:/Bureau/fractals/fractalpattern.png"));
+
+        //testColor()
         /*BufferedImage image = new BufferedImage(80, 80, BufferedImage.TYPE_INT_ARGB);
         Graphics2D g2d = (Graphics2D) image.getGraphics();
 
@@ -65,15 +75,13 @@ public class IW {
         return image;
     }
 
-    private static BufferedImage makeFractal(int width, int height, int startX, int startY, Color backgroundColor, Color mainColor, Color accentuationColor, int iterations) {
+    private static BufferedImage makeFractal(int width, int height, int startX, int startY, Color backgroundColor, Color mainColor, Color accentuationColor, int iterations, boolean putJustSomeMagicPlease) {
 
-        Random random = new Random();
-
-        System.out.println("Creating the fractal...");
-
+        RandomOperation random = new RandomOperation(3, 0, width, height);
         BufferedImage image = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);
         Graphics2D g2d = (Graphics2D) image.getGraphics();
 
+        System.out.println("Creating the fractal...");
         g2d.setColor(backgroundColor);
         g2d.fillRect(0, 0, width, height);
         g2d.setColor(mainColor);
@@ -81,51 +89,38 @@ public class IW {
         for (int i = 0 ; i < iterations ; i++){
 
             g2d.fillRect(startX, startY, 1, 1);
-
             System.out.println("x : " + startX + ", y : " + startY);
-
-            int n = random.nextInt(4 + 1);
-
-            if (n == 0 && startX + 1 < width){
-                startX++;
-            } else if (n == 1 && startX - 1 >= 0){
-                startX--;
-            } else if (n == 2 && startY + 1 < height){
-                startY++;
-            } else if (n == 3 && startY - 1 >= 0){
-                startY--;
-            }
+            random.op(startX, startY);
+            startX = RandomOperation.x;
+            startY = RandomOperation.y;
         }
-
-        g2d.dispose();
 
         System.out.println("Fractal finished, magic incoming. ;)");
 
-        image = improveAFractalMagically(image, mainColor, backgroundColor, accentuationColor);
-
-        return image;
+        return improveAFractalMagically(image, backgroundColor, mainColor, accentuationColor, putJustSomeMagicPlease);
     }
 
-    private static BufferedImage improveAFractalMagically(BufferedImage image, Color mainColor, Color backgroundColor, Color accentuationColor) {
+    private static BufferedImage improveAFractalMagically(BufferedImage image, Color backgroundColor, Color mainColor, Color accentuationColor, boolean makeNewImage) {
 
         int width = image.getWidth();
         int height = image.getHeight();
 
+        BufferedImage newImage = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);
+        Graphics2D g2d = (Graphics2D) image.getGraphics();
+
+        if (makeNewImage){g2d = (Graphics2D) newImage.getGraphics();}
+
         System.out.println("Entering Magical World.");
+        g2d.setColor(accentuationColor);
 
         for (int w = 0 ; w < width ; w++){
             for (int h = 0 ; h < height ; h++){
 
-                Graphics2D g2d;
-
                 if (image.getRGB(w, h) == mainColor.getRGB()){
                     if ((w + 1 < width && image.getRGB(w+1, h) == backgroundColor.getRGB()) || (w - 1 >= 0 && image.getRGB(w-1, h) == backgroundColor.getRGB()) || (h + 1 < height && image.getRGB(w, h+1) == backgroundColor.getRGB()) || (h - 1 >= 0 && image.getRGB(w, h-1) == backgroundColor.getRGB())){
 
-                        g2d = (Graphics2D) image.getGraphics();
-                        g2d.setColor(accentuationColor);
                         g2d.fillRect(w, h, 1, 1);
                         System.out.println("Setting pixel.");
-                        g2d.dispose();
                     }
                 } else {
                     System.out.println("No pixel for you.");
@@ -133,7 +128,45 @@ public class IW {
             }
         }
 
+        g2d.dispose();
         System.out.println("Magic has ended, returning to overworld.");
+
+        return makeNewImage ? newImage : image;
+    }
+
+    private static BufferedImage makeSpecialFractal(BufferedImage image, Color backgroundColor, Color mainColor, int iterations){
+
+        int width = image.getWidth();
+        int height = image.getHeight();
+
+        RandomOperation random = new RandomOperation(4, 0, width, height);
+        Graphics2D g2d = (Graphics2D) image.getGraphics();
+
+        System.out.println("Creating the fractal...");
+        g2d.setColor(mainColor);
+
+        for (int i = 0; i < iterations; ++i) {
+            for (int x = 0; x < width; ++x) {
+                for (int y = 0; y < height; ++y) {
+
+                    if (image.getRGB(x, y) == mainColor.getRGB()) {
+                        if ((x + 1 < width && image.getRGB(x + 1, y) == backgroundColor.getRGB()) || (x - 1 >= 0 && image.getRGB(x - 1, y) == backgroundColor.getRGB()) || (y + 1 < height && image.getRGB(x, y + 1) == backgroundColor.getRGB()) || (y - 1 >= 0 && image.getRGB(x, y - 1) == backgroundColor.getRGB())) {
+
+                            g2d.fillRect(x, y, 1, 1);
+
+                            System.out.println("x : " + x + ", y : " + y);
+
+                            random.op(x, y);
+                            x = RandomOperation.x;
+                            y = RandomOperation.y;
+                        }
+                    }
+                }
+            }
+        }
+
+        g2d.dispose();
+        System.out.println("Fractal finished, magic incoming. ;)");
 
         return image;
     }

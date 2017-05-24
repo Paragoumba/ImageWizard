@@ -1,7 +1,11 @@
 package fr.paragoumba.imagewizard;
 
+import javax.swing.*;
 import java.awt.*;
 import java.awt.image.BufferedImage;
+
+import static fr.paragoumba.imagewizard.IW.frame;
+import static fr.paragoumba.imagewizard.IW.panel;
 
 /**
  * Created by Paragoumba on 21/05/2017.
@@ -25,6 +29,12 @@ public class Fractals {
         for (int i = 0 ; i < iterations ; i++){
 
             g2d.fillRect(startX, startY, 1, 1);
+
+            SwingUtilities.invokeLater(() -> {
+                panel.getGraphics().drawImage(image, 0, 0, null);
+                frame.pack();
+            });
+
             System.out.println("x : " + startX + ", y : " + startY);
             random.op(startX, startY);
             startX = RandomOperation.x;

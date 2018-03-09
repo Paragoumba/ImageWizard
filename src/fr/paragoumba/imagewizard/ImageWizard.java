@@ -61,7 +61,7 @@ public class ImageWizard {
 
         testColor(image, Color.cyan);*/
 
-        ImageIO.write(Decomposer.decompose(ImageIO.read(new File("/home/paragoumba/Bureau/google.png")), 1920, 1080), "PNG", new File("/home/paragoumba/Bureau/Dev/Images/decomposer" + System.currentTimeMillis() + ".png"));
+        Decomposer.decompose(ImageIO.read(new File("/home/paragoumba/Bureau/google.png")), "/home/paragoumba/Bureau/Dev/Images/decomposer", 0.2);
         System.out.println("Execution time : " + (System.currentTimeMillis() - time) + "ms.");
 
         /*BufferedImage image = new BufferedImage(80, 80, BufferedImage.TYPE_INT_ARGB);

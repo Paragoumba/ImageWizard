@@ -1,35 +1,35 @@
 package fr.paragoumba.imagewizard;
 
+import javax.imageio.ImageIO;
 import java.awt.*;
 import java.awt.image.BufferedImage;
+import java.io.File;
+import java.io.IOException;
 
 public class Decomposer {
 
     private Decomposer(){}
 
-    public static BufferedImage[] decompose(BufferedImage image, int width, int height){
+    public static void decompose(BufferedImage image, String finalImagePath, double k) throws IOException {
 
-
-        int imageWidth = height / 2;
-        double ratio = (double) imageWidth / image.getWidth();
-        int imageHeight = (int) Math.round(ratio * image.getHeight());
-        double k = 1.2;
+        int imageWidth = image.getWidth();
+        int imageHeight = image.getHeight();
 
         BufferedImage red = new BufferedImage(imageWidth, imageHeight, BufferedImage.TYPE_INT_ARGB);
         BufferedImage green = new BufferedImage(imageWidth, imageHeight, BufferedImage.TYPE_INT_ARGB);
         BufferedImage blue = new BufferedImage(imageWidth, imageHeight, BufferedImage.TYPE_INT_ARGB);
         BufferedImage gray = new BufferedImage(imageWidth, imageHeight, BufferedImage.TYPE_INT_ARGB);
-        BufferedImage alpha = new BufferedImage(imageWidth, imageHeight, BufferedImage.TYPE_INT_RGB);
+        BufferedImage alpha = new BufferedImage(imageWidth, imageHeight, BufferedImage.TYPE_INT_ARGB);
         BufferedImage resizedImage = new BufferedImage(imageWidth, imageHeight, BufferedImage.TYPE_INT_ARGB);
-        BufferedImage finalImage = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);
+        BufferedImage finalImage = new BufferedImage(imageWidth * 3, imageHeight * 2, BufferedImage.TYPE_INT_ARGB);
 
         BufferedImage yellow = new BufferedImage(imageWidth, imageHeight, BufferedImage.TYPE_INT_ARGB);
         BufferedImage cyan = new BufferedImage(imageWidth, imageHeight, BufferedImage.TYPE_INT_ARGB);
         BufferedImage magenta = new BufferedImage(imageWidth, imageHeight, BufferedImage.TYPE_INT_ARGB);
-        BufferedImage blackAndWhite = new BufferedImage(imageWidth, imageHeight, BufferedImage.TYPE_INT_RGB);
-        BufferedImage surprise = new BufferedImage(imageWidth, imageHeight, BufferedImage.TYPE_INT_RGB);
+        BufferedImage blackAndWhite = new BufferedImage(imageWidth, imageHeight, BufferedImage.TYPE_INT_ARGB);
+        BufferedImage inverted = new BufferedImage(imageWidth, imageHeight, BufferedImage.TYPE_INT_ARGB);
         BufferedImage coef = new BufferedImage(imageWidth, imageHeight, BufferedImage.TYPE_INT_ARGB);
-        BufferedImage finalImage2 = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);
+        BufferedImage finalImage2 = new BufferedImage(imageWidth * 3, imageHeight * 2, BufferedImage.TYPE_INT_ARGB);
 
         Graphics2D gRed = red.createGraphics();
         Graphics2D gGreen = green.createGraphics();
@@ -42,13 +42,27 @@ public class Decomposer {
         Graphics2D gCyan = cyan.createGraphics();
         Graphics2D gMagenta = magenta.createGraphics();
         Graphics2D gBlackAndWhite = blackAndWhite.createGraphics();
-        Graphics2D gSurprise = surprise.createGraphics();
+        Graphics2D gInverted = inverted.createGraphics();
         Graphics2D gCoef = coef.createGraphics();
 
         for (int x = 0; x < image.getWidth(); ++x){
             for (int y = 0; y < image.getHeight(); ++y){
 
                 Color color = new Color(image.getRGB(x, y), true);
+
+                int newX = Math.round(x);
+                int newY = Math.round(y);
+
+                gResized.setColor(color);
+                gResized.drawRect(newX, newY, 1, 1);
+
+            }
+        }
+
+        for (int x = 0; x < imageWidth; ++x){
+            for (int y = 0; y < imageHeight; ++y){
+
+                Color color = new Color(resizedImage.getRGB(x, y), true);
 
                 gRed.setColor(new Color(color.getRed(), 0, 0, color.getAlpha()));
                 gGreen.setColor(new Color(0, color.getGreen(), 0, color.getAlpha()));
@@ -61,31 +75,37 @@ public class Decomposer {
                 int alphaValue = color.getAlpha() * -1 + 255;
 
                 gAlpha.setColor(new Color(alphaValue, alphaValue, alphaValue));
-                gResized.setColor(color);
                 
-                int newX = (int) Math.round(x * ratio);
-                int newY = (int) Math.round(y * ratio);
+                int newX = Math.round(x);
+                int newY = Math.round(y);
 
                 gRed.drawRect(newX, newY, 1, 1);
                 gGreen.drawRect(newX, newY, 1, 1);
                 gBlue.drawRect(newX, newY, 1, 1);
                 gGray.drawRect(newX, newY, 1, 1);
                 gAlpha.drawRect(newX, newY, 1, 1);
-                gResized.drawRect(newX, newY, 1, 1);
 
 
-                gYellow.setColor(new Color(color.getRed(), color.getGreen(), 0));
-                gCyan.setColor(new Color(0, color.getGreen(), color.getBlue()));
-                gMagenta.setColor(new Color(color.getRed(), 0, color.getBlue()));
-                gBlackAndWhite.setColor(new Color());
-                gSurprise.setColor(new Color());
-                gCoef.setColor(new Color(Math.round(color.getRed() * k), Math.round(color.getGreen() * k), Math.round(color.getBlue() * k)));
+                gYellow.setColor(new Color(color.getRed(), color.getGreen(), 0, color.getAlpha()));
+                gCyan.setColor(new Color(0, color.getGreen(), color.getBlue(), color.getAlpha()));
+                gMagenta.setColor(new Color(color.getRed(), 0, color.getBlue(), color.getAlpha()));
+
+                int averageNumber = (color.getRed() + color.getGreen() + color.getBlue()) / 3;
+
+                gBlackAndWhite.setColor(averageNumber > 127 ? Color.WHITE : Color.BLACK);
+                gInverted.setColor(new Color(255 - color.getRed(), 255 - color.getGreen(), 255 - color.getBlue(), color.getAlpha()));
+
+                int redNumber = (int) Math.round(color.getRed() * k);
+                int greenNumber = (int) Math.round(color.getGreen() * k);
+                int blueNumber = (int) Math.round(color.getBlue() * k);
+
+                gCoef.setColor(new Color(redNumber > 255 ? 255 : redNumber, greenNumber > 255 ? 255 : greenNumber, blueNumber > 255 ? 255 : blueNumber, color.getAlpha()));
 
                 gYellow.drawRect(newX, newY, 1, 1);
                 gCyan.drawRect(newX, newY, 1, 1);
                 gMagenta.drawRect(newX, newY, 1, 1);
                 gBlackAndWhite.drawRect(newX, newY, 1, 1);
-                gSurprise.drawRect(newX, newY, 1, 1);
+                gInverted.drawRect(newX, newY, 1, 1);
                 gCoef.drawRect(newX, newY, 1, 1);
 
             }
@@ -101,14 +121,17 @@ public class Decomposer {
         gFinal.drawImage(resizedImage, imageWidth, imageHeight, null);
         gFinal.drawImage(gray, imageWidth * 2, imageHeight, null);
 
-        gFinal2.drawImage();
-        gFinal2.drawImage();
-        gFinal2.drawImage();
-        gFinal2.drawImage();
-        gFinal2.drawImage();
-        gFinal2.drawImage();
+        gFinal2.drawImage(yellow, 0, 0, null);
+        gFinal2.drawImage(cyan, imageWidth, 0, null);
+        gFinal2.drawImage(magenta, imageWidth * 2, 0, null);
+        gFinal2.drawImage(blackAndWhite, 0, imageHeight, null);
+        gFinal2.drawImage(inverted, imageWidth, imageHeight, null);
+        gFinal2.drawImage(coef, imageWidth * 2, imageHeight, null);
 
-        return new BufferedImage[]{finalImage, finalImage2};
+        long date = System.currentTimeMillis();
+
+        ImageIO.write(finalImage, "PNG", new File(finalImagePath + date + ".png"));
+        ImageIO.write(finalImage2, "PNG", new File(finalImagePath + date + "-1.png"));
 
     }
 }

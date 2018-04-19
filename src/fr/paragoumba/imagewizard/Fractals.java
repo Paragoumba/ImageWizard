@@ -4,8 +4,8 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.image.BufferedImage;
 
-import static fr.paragoumba.imagewizard.IW.frame;
-import static fr.paragoumba.imagewizard.IW.panel;
+import static fr.paragoumba.imagewizard.ImageWizard.frame;
+import static fr.paragoumba.imagewizard.ImageWizard.panel;
 
 /**
  * Created by Paragoumba on 21/05/2017.

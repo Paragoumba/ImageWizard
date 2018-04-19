@@ -8,43 +8,41 @@ import java.io.File;
 import java.io.IOException;
 import java.util.Scanner;
 
-/**
- * Created by Paragoumba on 16/05/2017.
- */
+public class ImageWizard {
 
-public class IW {
-
-    private static BufferedImage square;
-    private static BufferedImage finalImage;
+    //private static BufferedImage square;
+    //private static BufferedImage finalImage;
 
     public static JFrame frame = new JFrame("Fractal Creator Studio");
     public static JPanel panel = new JPanel();
 
     public static void main(String[] args) throws IOException {
 
-        Scanner scanner = new Scanner(System.in);
-        String path = System.getProperties().getProperty("java.home").startsWith("D:\\Program Files\\Java\\") ? "D:/Bureau/fractals/" : "C:/Users/parag/Desktop/fractals/";
+        //Scanner scanner = new Scanner(System.in);
+        //String path = System.getProperties().getProperty("java.home").startsWith("D:\\Program Files\\Java\\") ? "D:/Bureau/fractals/" : "C:/Users/parag/Desktop/fractals/";
         long time = System.currentTimeMillis();
 
-        frame.add(panel);
+        //ImageIO.write(Spiral.spiralIt(ImageIO.read(new File("C:/Users/parag/Desktop/Dev/IW/spirals/first.jpg")), 1), "PNG", new File("C:/Users/parag/Desktop/Dev/IW/spirals/firstResult.png"));
+
+        /*frame.add(panel);
         frame.setVisible(true);
-        frame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
+        frame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);*/
 
         //makeFractal()
-        int width = 1920;
+        /*int width = 1920;
         int height = 1080;
         int startX = 960;
         int startY = 540;
         Color backgroundColor = new Color(255, 255, 255);
         Color mainColor = new Color(254, 255, 255);
         Color accentuationColor = new Color(0, 0, 0);
-        int iterations = 10000000;
+        int iterations = 10000000;*/
 
-        System.out.println("Put some magic ?");
+        //System.out.println("Put some magic ?");
 
-        boolean putJustSomeMagicPlease = scanner.nextBoolean();
+        //boolean putJustSomeMagicPlease = scanner.nextBoolean();
 
-        ImageIO.write(Fractals.makeFractal(width, height, startX, startY, backgroundColor, mainColor, accentuationColor, iterations, putJustSomeMagicPlease), "png", new File(path + width + "x" + height + (putJustSomeMagicPlease ? "" : "" + startX + startY + backgroundColor.getRGB() + mainColor.getRGB()) + accentuationColor.getRGB() + iterations + ".png"));
+        //ImageIO.write(Fractals.makeFractal(width, height, startX, startY, backgroundColor, mainColor, accentuationColor, iterations, putJustSomeMagicPlease), "png", new File(path + width + "x" + height + (putJustSomeMagicPlease ? "" : "" + startX + startY + backgroundColor.getRGB() + mainColor.getRGB()) + accentuationColor.getRGB() + iterations + ".png"));
 
         //makeSpecialFractal()
         //ImageIO.write(makeSpecialFractal(ImageIO.read(new File("D:/Bureau/fractals/Sans titre.png")), new Color(0, 255, 255), new Color(221, 221, 34), 1000), "png", new File("D:/Bureau/fractals/fractalpattern.png"));
@@ -63,6 +61,7 @@ public class IW {
 
         testColor(image, Color.cyan);*/
 
+        Decomposer.decompose(ImageIO.read(new File("/home/paragoumba/Bureau/google.png")), "/home/paragoumba/Bureau/Dev/Images/decomposer", 0.2);
         System.out.println("Execution time : " + (System.currentTimeMillis() - time) + "ms.");
 
         /*BufferedImage image = new BufferedImage(80, 80, BufferedImage.TYPE_INT_ARGB);
@@ -73,5 +72,6 @@ public class IW {
         g2d.drawString("y", 5, 5);
 
         ImageIO.write(image, "png", new File("D:/Bureau/x.png"));*/
+
     }
 }

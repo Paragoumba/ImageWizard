@@ -1,14 +1,15 @@
 package fr.paragoumba.imagewizard;
 
-import javax.imageio.ImageIO;
-import javax.swing.*;
-import java.awt.*;
-import java.awt.image.BufferedImage;
-import java.io.File;
-import java.io.IOException;
-import java.util.Scanner;
+import javafx.application.Application;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
+import javafx.scene.image.Image;
+import javafx.stage.Stage;
 
-public class ImageWizard {
+import javax.swing.*;
+
+public class ImageWizard extends Application {
 
     //private static BufferedImage square;
     //private static BufferedImage finalImage;
@@ -16,11 +17,30 @@ public class ImageWizard {
     public static JFrame frame = new JFrame("Fractal Creator Studio");
     public static JPanel panel = new JPanel();
 
-    public static void main(String[] args) throws IOException {
+    @Override
+    public void start(Stage primaryStage) throws Exception {
+
+        FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("sample.fxml"));
+        Parent root = fxmlLoader.load();
+        Controller.controller = fxmlLoader.getController();
+
+        primaryStage.setTitle("ImageWizard");
+        primaryStage.setScene(new Scene(root, 1000, 563));
+        primaryStage.setMinWidth(800);
+        primaryStage.setMinHeight(450);
+        primaryStage.setMaximized(true);
+        primaryStage.getIcons().add(new Image(ImageWizard.class.getResourceAsStream("res/wizard-face.png")));
+        primaryStage.show();
+
+    }
+
+    public static void main(String[] args){
+
+        launch(args);
 
         //Scanner scanner = new Scanner(System.in);
         //String path = System.getProperties().getProperty("java.home").startsWith("D:\\Program Files\\Java\\") ? "D:/Bureau/fractals/" : "C:/Users/parag/Desktop/fractals/";
-        long time = System.currentTimeMillis();
+        //long time = System.currentTimeMillis();
 
         //ImageIO.write(Spiral.spiralIt(ImageIO.read(new File("C:/Users/parag/Desktop/Dev/IW/spirals/first.jpg")), 1), "PNG", new File("C:/Users/parag/Desktop/Dev/IW/spirals/firstResult.png"));
 
@@ -61,8 +81,8 @@ public class ImageWizard {
 
         testColor(image, Color.cyan);*/
 
-        Decomposer.decompose(ImageIO.read(new File("/home/paragoumba/Bureau/google.png")), "/home/paragoumba/Bureau/Dev/Images/decomposer", 0.2);
-        System.out.println("Execution time : " + (System.currentTimeMillis() - time) + "ms.");
+        //Decomposer.decompose(ImageIO.read(new File("/home/paragoumba/Bureau/google.png")), 0.2);
+        //System.out.println("Execution time : " + (System.currentTimeMillis() - time) + "ms.");
 
         /*BufferedImage image = new BufferedImage(80, 80, BufferedImage.TYPE_INT_ARGB);
         Graphics2D g2d = (Graphics2D) image.getGraphics();

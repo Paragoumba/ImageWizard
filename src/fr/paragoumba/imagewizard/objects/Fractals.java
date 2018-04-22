@@ -1,4 +1,4 @@
-package fr.paragoumba.imagewizard;
+package fr.paragoumba.imagewizard.objects;
 
 import javax.swing.*;
 import java.awt.*;
@@ -15,7 +15,9 @@ public class Fractals {
 
     private Fractals(){}
 
-    static BufferedImage makeFractal(int width, int height, int startX, int startY, Color backgroundColor, Color mainColor, Color accentuationColor, int iterations, boolean putJustSomeMagicPlease) {
+    public static BufferedImage finalImage;
+
+    public static void makeFractal(int width, int height, int startX, int startY, Color backgroundColor, Color mainColor, Color accentuationColor, int iterations, boolean putJustSomeMagicPlease) {
 
         RandomOperation random = new RandomOperation(3, 0, width, height);
         BufferedImage image = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);
@@ -31,22 +33,27 @@ public class Fractals {
             g2d.fillRect(startX, startY, 1, 1);
 
             SwingUtilities.invokeLater(() -> {
+
                 panel.getGraphics().drawImage(image, 0, 0, null);
                 frame.pack();
+
             });
 
             System.out.println("x : " + startX + ", y : " + startY);
             random.op(startX, startY);
+
             startX = RandomOperation.x;
             startY = RandomOperation.y;
+
         }
 
         System.out.println("Fractal finished, magic incoming. ;)");
 
-        return improveAFractalMagically(image, backgroundColor, mainColor, accentuationColor, putJustSomeMagicPlease);
+        finalImage = improveAFractalMagically(image, backgroundColor, mainColor, accentuationColor, putJustSomeMagicPlease);
+
     }
 
-    static BufferedImage improveAFractalMagically(BufferedImage image, Color backgroundColor, Color mainColor, Color accentuationColor, boolean makeNewImage) {
+    private static BufferedImage improveAFractalMagically(BufferedImage image, Color backgroundColor, Color mainColor, Color accentuationColor, boolean makeNewImage) {
 
         int width = image.getWidth();
         int height = image.getHeight();
@@ -54,7 +61,7 @@ public class Fractals {
         BufferedImage newImage = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);
         Graphics2D g2d = (Graphics2D) image.getGraphics();
 
-        if (makeNewImage){g2d = (Graphics2D) newImage.getGraphics();}
+        if (makeNewImage) g2d = (Graphics2D) newImage.getGraphics();
 
         System.out.println("Entering Magical World.");
         g2d.setColor(accentuationColor);
@@ -67,10 +74,11 @@ public class Fractals {
 
                         g2d.fillRect(w, h, 1, 1);
                         System.out.println("Setting pixel.");
+
                     }
-                } else {
-                    System.out.println("No pixel for you.");
-                }
+
+                } else System.out.println("No pixel for you.");
+
             }
         }
 
@@ -80,7 +88,7 @@ public class Fractals {
         return makeNewImage ? newImage : image;
     }
 
-    static BufferedImage makeSpecialFractal(BufferedImage image, Color backgroundColor, Color mainColor, int iterations){
+    public static void makeSpecialFractal(BufferedImage image, Color backgroundColor, Color mainColor, int iterations){
 
         int width = image.getWidth();
         int height = image.getHeight();
@@ -114,6 +122,7 @@ public class Fractals {
         g2d.dispose();
         System.out.println("Fractal finished, magic incoming. ;)");
 
-        return image;
+        finalImage = image;
+
     }
 }

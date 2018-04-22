@@ -1,8 +1,10 @@
 package fr.paragoumba.imagewizard;
 
-import javax.swing.*;
-import java.awt.*;
-import java.awt.image.BufferedImage;
+import fr.paragoumba.imagewizard.objects.PNGtoSVG;
+
+import javax.imageio.ImageIO;
+import java.io.File;
+import java.io.IOException;
 
 /**
  * Created by Paragoumba on 23/05/2017.
@@ -10,9 +12,9 @@ import java.awt.image.BufferedImage;
 
 public class Test {
 
-    public static void main(String[] args) {
+    public static void main(String[] args) throws IOException {
 
-        JFrame jframe = new JFrame();
+        /*JFrame jframe = new JFrame();
         JPanel jpanel = new JPanel();
         Color color = new Color(255, 0, 0);
         BufferedImage image = new BufferedImage(10, 1, BufferedImage.TYPE_INT_ARGB);
@@ -38,6 +40,8 @@ public class Test {
                 } catch (InterruptedException e) {e.printStackTrace();}
             }
             return;
-        }
+        }*/
+
+        System.out.println(PNGtoSVG.convert(ImageIO.read(new File("D:/Desktop/goomba.png")), 5));
     }
 }

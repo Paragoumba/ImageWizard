@@ -1,4 +1,4 @@
-package fr.paragoumba.imagewizard;
+package fr.paragoumba.imagewizard.objects;
 
 import java.awt.*;
 import java.awt.image.BufferedImage;
@@ -7,7 +7,9 @@ public class Spiral {
 
     private Spiral(){}
 
-    static BufferedImage spiralIt(BufferedImage baseImage, int coef){
+    public static BufferedImage finalImage;
+
+    public static void spiralIt(BufferedImage baseImage, int coef){
 
         if (baseImage.getHeight() == baseImage.getWidth()) {
 
@@ -33,9 +35,11 @@ public class Spiral {
                 }
             }
 
-            return image;
+            finalImage = image;
+
         }
 
-        return baseImage;
+        finalImage = baseImage;
+
     }
 }

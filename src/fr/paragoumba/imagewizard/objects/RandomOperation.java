@@ -1,4 +1,4 @@
-package fr.paragoumba.imagewizard;
+package fr.paragoumba.imagewizard.objects;
 
 import java.util.Random;
 

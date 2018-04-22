@@ -1,16 +1,18 @@
-package fr.paragoumba.imagewizard;
+package fr.paragoumba.imagewizard.objects;
 
-import javax.imageio.ImageIO;
 import java.awt.*;
 import java.awt.image.BufferedImage;
-import java.io.File;
-import java.io.IOException;
 
 public class Decomposer {
 
     private Decomposer(){}
 
-    public static void decompose(BufferedImage image, String finalImagePath, double k) throws IOException {
+    public static BufferedImage firstImage;
+    public static BufferedImage secondImage;
+
+    public static void decompose(BufferedImage image, double k) {
+
+        k /= 1000;
 
         int imageWidth = image.getWidth();
         int imageHeight = image.getHeight();
@@ -128,10 +130,8 @@ public class Decomposer {
         gFinal2.drawImage(inverted, imageWidth, imageHeight, null);
         gFinal2.drawImage(coef, imageWidth * 2, imageHeight, null);
 
-        long date = System.currentTimeMillis();
-
-        ImageIO.write(finalImage, "PNG", new File(finalImagePath + date + ".png"));
-        ImageIO.write(finalImage2, "PNG", new File(finalImagePath + date + "-1.png"));
+        firstImage = finalImage;
+        secondImage = finalImage2;
 
     }
 }

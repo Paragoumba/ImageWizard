@@ -13,8 +13,8 @@ public class Spiral {
 
         if (baseImage.getHeight() == baseImage.getWidth()) {
 
-            BufferedImage image = new BufferedImage(baseImage.getWidth(), baseImage.getHeight(), BufferedImage.TYPE_INT_RGB);
-            Graphics2D graphics2D = image.createGraphics();
+            finalImage = new BufferedImage(baseImage.getWidth(), baseImage.getHeight(), BufferedImage.TYPE_INT_RGB);
+            Graphics2D graphics2D = finalImage.createGraphics();
 
             for (int x = 0; x < baseImage.getWidth(); ++x) {
                 for (int y = 0; y < baseImage.getHeight(); ++y) {
@@ -34,9 +34,6 @@ public class Spiral {
 
                 }
             }
-
-            finalImage = image;
-
         }
 
         finalImage = baseImage;

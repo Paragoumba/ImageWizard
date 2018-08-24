@@ -94,7 +94,7 @@ public class Fractals {
         int height = image.getHeight();
 
         RandomOperation random = new RandomOperation(4, 0, width, height);
-        Graphics2D g2d = (Graphics2D) image.getGraphics();
+        Graphics2D g2d = (Graphics2D) finalImage.getGraphics();
 
         System.out.println("Creating the fractal...");
         g2d.setColor(mainColor);
@@ -121,8 +121,6 @@ public class Fractals {
 
         g2d.dispose();
         System.out.println("Fractal finished, magic incoming. ;)");
-
-        finalImage = image;
 
     }
 }

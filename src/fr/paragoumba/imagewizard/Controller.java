@@ -24,6 +24,7 @@ public class Controller {
     private final String fileErrorMessage = "File didn't exists !";
     private final String saveErrorMessage = "Error in file saving ! Sorry ¯\\_(ツ)_/¯";
     private final String execTimeMessage = "Execution time ";
+    public final String invalidArgument = "Invalid argument.";
 
     @FXML
     Label statusDecomposerLabel;
@@ -161,6 +162,53 @@ public class Controller {
 
     @FXML
     Button clearSpiralsButton;
+
+    
+    @FXML
+    Label statusBlurpleLabel;
+
+    @FXML
+    TextField loadPathBlurpleTextField;
+
+    @FXML
+    Button loadBlurpleButton;
+
+    @FXML
+    TextField savePathBlurpleTextField;
+
+    @FXML
+    Button saveBlurpleButton;
+
+    @FXML
+    ImageView blurpleImageView;
+
+    @FXML
+    Button clearBlurpleButton;
+
+
+    @FXML
+    public Label statusMTGALabel;
+
+    @FXML
+    TextField loadPathMTGATextField;
+
+    @FXML
+    Button loadMTGAButton;
+
+    @FXML
+    TextField savePathMTGATextField;
+
+    @FXML
+    Button saveMTGAButton;
+
+    @FXML
+    ImageView MTGAImageView;
+
+    @FXML
+    Button clearMTGAButton;
+
+    @FXML
+    public TextField colorsMTGATextField;
 
     @FXML
     public void initialize(){
@@ -421,6 +469,78 @@ public class Controller {
             } catch (IOException e) {
 
                 statusSpiralsLabel.setText(saveErrorMessage);
+
+            }
+        }
+    }
+
+    @FXML
+    public void runBlurple(){
+
+        long start = System.currentTimeMillis();
+
+        try {
+
+            Blurple.blurplize(ImageIO.read(new File(loadPathBlurpleTextField.getText())));
+
+            blurpleImageView.setImage(Blurple.finalImage == null ? null : SwingFXUtils.toFXImage(Blurple.finalImage, null));
+            statusBlurpleLabel.setText(execTimeMessage + getExecTime(System.currentTimeMillis() - start));
+
+        } catch (IOException e){
+
+            statusBlurpleLabel.setText(fileErrorMessage);
+
+        }
+    }
+
+    @FXML
+    public void saveBlurple(){
+
+        if (Blurple.finalImage != null){
+
+            try {
+
+                ImageIO.write(Blurple.finalImage, "PNG", new File(savePathBlurpleTextField.getText()));
+
+            } catch (IOException e){
+
+                statusBlurpleLabel.setText(saveErrorMessage);
+
+            }
+        }
+    }
+
+    @FXML
+    public void runMTGA(){
+
+        long start = System.currentTimeMillis();
+
+        try {
+
+            MakeThemeGreatAgain.makeThemeGreatAgain(ImageIO.read(new File(loadPathMTGATextField.getText())));
+
+            MTGAImageView.setImage(MakeThemeGreatAgain.finalImage == null ? null : SwingFXUtils.toFXImage(MakeThemeGreatAgain.finalImage, null));
+            statusMTGALabel.setText(execTimeMessage + getExecTime(System.currentTimeMillis() - start));
+
+        } catch (IOException e){
+
+            statusMTGALabel.setText(fileErrorMessage);
+
+        }
+    }
+
+    @FXML
+    public void saveMTGA(){
+
+        if (MakeThemeGreatAgain.finalImage != null){
+
+            try {
+
+                ImageIO.write(MakeThemeGreatAgain.finalImage, "PNG", new File(savePathMTGATextField.getText()));
+
+            } catch (IOException e){
+
+                statusMTGALabel.setText(saveErrorMessage);
 
             }
         }

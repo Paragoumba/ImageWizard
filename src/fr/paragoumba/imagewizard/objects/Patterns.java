@@ -15,8 +15,8 @@ public class Patterns {
 
     public static void repeat(int width, int height, BufferedImage pattern){
 
-        BufferedImage image = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);
-        Graphics g = image.getGraphics();
+        finalImage = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);
+        Graphics g = finalImage.getGraphics();
 
         for (int x = 0; x < width - pattern.getWidth() + 1; x += pattern.getWidth()) {
             for (int y = 0; y < height - pattern.getHeight() + 1; y += pattern.getHeight()) {
@@ -25,8 +25,5 @@ public class Patterns {
 
             }
         }
-
-        finalImage = image;
-
     }
 }
